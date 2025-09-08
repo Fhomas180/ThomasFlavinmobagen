@@ -14,6 +14,23 @@ Vector2f SeparationRule::computeForce(const std::vector<Boid*>& neighborhood, Bo
   //        Vector2f position = boid->transform.position;
   //        int countCloseFlockmates = 0;
   //        // todo: find and apply force only on the closest mates
+  const float Radius = 10.0f;
+  const float AwayRadius = 0.1f;
+
+  for (Boid* neighbor : neighborhood) {
+    if (neighbor != boid) {
+      Vector2f diff = boid->transform.position - neighbor->transform.position;
+      float dist = diff.getMagnitude();
+      if (dist < Radius && dist > AwayRadius) {
+        Vector2f direction = diff / dist;
+        separatingForce += direction / dist;
+      }
+    }
+
+
+
+  }
+
   //    }
 
   separatingForce = Vector2f::normalized(separatingForce);

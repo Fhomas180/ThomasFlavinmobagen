@@ -1,4 +1,5 @@
 #define SDL_MAIN_HANDLED true
+#include <iostream>
 #include "engine/Engine.h"
 #include "gameobjects/World.h"
 
@@ -20,11 +21,14 @@ int main(int, char**) {
 
     SDL_Log("Running Engine");
     engine->Run();
+
     SDL_Log("Engine Stopped");
   }
 
   SDL_Log("Exiting Engine");
+
   engine->Exit();
   SDL_Log("Engine Exited");
   return 0;
+
 }

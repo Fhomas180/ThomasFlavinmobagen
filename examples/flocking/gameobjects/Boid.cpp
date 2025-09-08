@@ -11,6 +11,7 @@ std::vector<Boid*> Boid::computeBoidNeighborhood() {
   // TODO: Optimize this! Move this to the world manager
   // Option 1. Locality Sensitive Hashing or Spatial hashing
   // Option 2. Quadtree or octree
+
   for (const auto& boid : world->boids) {
     if (boid != this) {
       float squareDistance = Vector2f::DistanceSquared(position, boid->getPosition());
