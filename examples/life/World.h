@@ -19,6 +19,7 @@ public:
   // to be called at the end of the frame
   void SwapBuffers();
   // todo: make it follow the standard at() function that returns the exactly element
+
   bool Get(Point2D point);
   // todo: make it follow the standard at() function that returns the exactly element
   void SetNext(Point2D point, bool value);
