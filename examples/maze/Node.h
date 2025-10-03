@@ -17,6 +17,7 @@ private:
 
 public:
   // todo: can you improve this?
+
   bool inline GetNorth() const { return data & 1U; };
   bool inline GetEast() const { return data >> 1U & 1U; };
   bool inline GetSouth() const { return data >> 2U & 1U; };
