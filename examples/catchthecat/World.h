@@ -9,7 +9,41 @@
 #include <bitset>
 #include <iostream>
 #include <vector>
+class Cat;
+class Catcher;
+struct CompactWorldState {
+  std::bitset<121> blocked;  // 16 bytes (121 bits for the grid)
+  int8_t catX : 4;           // 4 bits for cat X position (-5 to +5)
+  int8_t catY : 4;           // 4 bits for cat Y position (-5 to +5)
 
+  // Convert (x, y) coordinates to bit index
+  static int coordToIndex(int x, int y, int sideSize) {
+    return (y + sideSize / 2) * sideSize + (x + sideSize / 2);
+  }
+
+  // Check if position is blocked
+  bool isBlocked(int x, int y, int sideSize) const {
+    int idx = coordToIndex(x, y, sideSize);
+    return blocked[idx];
+  }
+
+  // Set position as blocked
+  void setBlocked(int x, int y, int sideSize, bool value) {
+    int idx = coordToIndex(x, y, sideSize);
+    blocked[idx] = value;
+  }
+
+  // Get cat position
+  Point2D getCatPosition() const {
+    return Point2D(catX, catY);
+  }
+
+  // Set cat position
+  void setCatPosition(int x, int y) {
+    catX = x;
+    catY = y;
+  }
+};
 class World : GameObject {
 private:
   float timeBetweenAITicks = 1;
@@ -30,6 +64,11 @@ private:
   // size of the side of the map
   int sideSize = 0;
   // todo: optimization make the world state only use 16 Bytes.
+  // Keep the original for compatibility
+
+  // Add compact version (optional, for optimization)
+  CompactWorldState compactState;
+
   // hints on how to do it:
   // the world have 11x11 size, so it needs 121 bits to represent it. in other words we need 16 bytes to fully represent it. bit representation: 0
   // empty, 1 blocked. to represent the cat position we need only one byte. 4 bits for X and another 4 for Y create a structure holding one byte for

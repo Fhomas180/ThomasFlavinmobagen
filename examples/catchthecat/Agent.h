@@ -1,11 +1,10 @@
-#ifndef AGENT_H
-#define AGENT_H
-#include "math/Point2D.h"
+#pragma once
 #include <vector>
+#include <utility>
+#include "math/Point2D.h"
 
 class World;
-
-class Agent {
+struct Agent {
 public:
   explicit Agent() = default;
 
@@ -13,5 +12,3 @@ public:
 
   std::vector<Point2D> generatePath(World* w);
 };
-
-#endif  // AGENT_H
