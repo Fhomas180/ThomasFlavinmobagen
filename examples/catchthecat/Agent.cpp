@@ -3,6 +3,8 @@
 #include <unordered_map>
 #include <queue>
 #include "World.h"
+
+#include <algorithm>
 using namespace std;
 std::vector<Point2D> Agent::generatePath(World* w) {
   unordered_map<Point2D, Point2D> cameFrom;  // to build the flowfield and build the path
@@ -15,7 +17,8 @@ std::vector<Point2D> Agent::generatePath(World* w) {
   frontier.push(catPos);
   frontierSet.insert(catPos);
   Point2D borderExit = Point2D::INFINITE;  // if at the end of the loop we dont find a border, we have to return random points
-
+  int sideSize = w->getWorldSideSize();
+  int halfSize = sideSize / 2;
   while (!frontier.empty()) {
     // get the current from frontier
     // remove the current from frontierset
@@ -25,6 +28,54 @@ std::vector<Point2D> Agent::generatePath(World* w) {
     // for every neighbor set the cameFrom
     // enqueue the neighbors to frontier and frontierset
     // do this up to find a visitable border and break the loop
+    Point2D current = frontier.front();
+    frontier.pop();
+
+    // remove the current from frontierset
+    frontierSet.erase(current);
+
+    // mark current as visited
+    visited[current] = true;
+
+    // check if we reached border
+    if (abs(current.x) == halfSize || abs(current.y) == halfSize) {
+      borderExit = current;
+      break;
+    }
+
+    // get visitable neighbors
+    auto neighbors = w->getVisitableNeighbors(catPos, current);
+
+    // iterate over the neighbors
+    for (const auto& neighbor : neighbors) {
+      // skip if already visited
+      if (visited.count(neighbor) && visited[neighbor]) continue;
+
+      // skip if already in frontier
+      if (frontierSet.count(neighbor)) continue;
+
+      // set the cameFrom
+      cameFrom[neighbor] = current;
+
+      // enqueue the neighbor
+      frontier.push(neighbor);
+      frontierSet.insert(neighbor);
+    }
+  }
+
+  // if the border is not infinity, build the path from border to the cat
+  if (borderExit != Point2D::INFINITE) {
+    vector<Point2D> path;
+    Point2D current = borderExit;
+
+    while (current != catPos) {
+      path.push_back(current);
+      current = cameFrom[current];
+    }
+
+    // reverse to get path from cat to border
+    std::reverse(path.begin(), path.end());
+    return path;
   }
 
   // if the border is not infinity, build the path from border to the cat using the camefrom map

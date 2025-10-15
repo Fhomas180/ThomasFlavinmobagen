@@ -4,6 +4,18 @@
 #include <climits>
 bool HuntAndKillExample::Step(World* w) {
   // todo: code this
+  if (!initialized) {
+    w->SetNodeColor({0, 0}, Color::White);
+
+    auto neighbors = getVisitables(w, {0, 0});
+    for (const auto& n : neighbors) {
+      stack.push_back(n);
+    }
+
+    initialized = true;
+    return true;
+  }
+
   if (stack.empty() && visited.empty()) {
     stack.push_back({0, 0});
     return true;
@@ -35,6 +47,7 @@ bool HuntAndKillExample::Step(World* w) {
         w->SetWest(current, false);
         w->SetEast(currentNeighbor, false);
       }
+      w->SetNodeColor(current, Color::White);
       stack.push_back(currentNeighbor);
     }else {
       stack.pop_back();
@@ -68,6 +81,7 @@ bool HuntAndKillExample::Step(World* w) {
         w->SetWest(huntCell, false);
         w->SetEast(neighbor, false);
       }
+
 
       stack.push_back(huntCell);
     }
@@ -133,6 +147,7 @@ std::vector<Point2D> HuntAndKillExample::getVisitedNeighbors(World* w, const Poi
   std::vector<Point2D> deltas = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
   auto sideOver2 = w->GetSize() / 2;
   std::vector<Point2D> neighbors;
+  auto clearColor = Color::DarkGray;
 
   // todo: code this
   for (const auto& delta : deltas) {

@@ -82,7 +82,6 @@ private:
 
   // check if catcher won
   bool catcherWinVerification();
-
 public:
   Point2D lastMove = Point2D(0, 0);
   int64_t moveDuration = 0;
@@ -136,6 +135,7 @@ public:
 
   // returns true if cat wins on the given space
   bool catWinsOnSpace(Point2D point);
+  std::vector<Point2D> getVisitableNeighbors(Point2D catPos, Point2D current);
 
   static std::vector<Point2D> neighbors(Point2D point) {
     std::vector<Point2D> n;

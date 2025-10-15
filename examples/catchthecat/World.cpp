@@ -239,3 +239,22 @@ bool World::catWinsOnSpace(Point2D point) {
   auto sideOver2 = sideSize / 2;
   return abs(point.x) == sideOver2 || abs(point.y) == sideOver2;
 }
+std::vector<Point2D> World::getVisitableNeighbors(Point2D catPos, Point2D current) {
+  std::vector<Point2D> visitableNeighbors;
+
+  // Get all 6 hexagonal neighbors
+  auto allNeighbors = neighbors(current);
+
+  for (const auto& neighbor : allNeighbors) {
+    // Skip if not valid position (out of bounds)
+    if (!isValidPosition(neighbor)) continue;
+
+    // Skip if blocked
+    if (getContent(neighbor)) continue;
+
+    // This neighbor is visitable
+    visitableNeighbors.push_back(neighbor);
+  }
+
+  return visitableNeighbors;
+}

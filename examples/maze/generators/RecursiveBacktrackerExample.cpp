@@ -5,6 +5,18 @@
 bool RecursiveBacktrackerExample::Step(World* w) {
   // todo: implement this
   Point2D chosenNeighbor;
+  if (!initialized) {
+    w->SetNodeColor({0, 0}, Color::White);
+
+    auto neighbors = getVisitables(w, {0, 0});
+    for (const auto& n : neighbors) {
+      stack.push_back(n);
+    }
+
+    initialized = true;
+    return true;
+  }
+
   if (stack.empty() && visited.empty()) {
     stack.push_back({0, 0});
 
@@ -44,6 +56,7 @@ bool RecursiveBacktrackerExample::Step(World* w) {
         w->SetEast(chosenNeighbor, false);
         // remove west wall from start and east wall from neighbor
       }
+      w->SetNodeColor(start, Color::White);
       stack.push_back(chosenNeighbor);
 
     }
